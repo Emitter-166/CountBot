@@ -17,9 +17,8 @@ public class Database extends ListenerAdapter {
     public static String countingChannelId = "null";
     public static boolean hasRewards = false;
     public static int amountCount = 0;
-    public static boolean sendType = false;
+    public static boolean actionType = false;
     public static String sendMessage = "Null";
-    public static String emoji = ":white_check_mark:";
     public static List<String> adminId = new ArrayList<>();
     public static MongoCollection collection;
     @Override
@@ -30,7 +29,7 @@ public class Database extends ListenerAdapter {
         MongoClient client = new MongoClient(clientURI);
         MongoDatabase database = client.getDatabase("count");
         collection = database.getCollection("count");
-
+        sync("818373020816637952");
     }
 
 
@@ -39,17 +38,30 @@ public class Database extends ListenerAdapter {
             updateDB(Id,"serverId", Key, value, isAdd);
     }
 
-    public static void setUser(String Id, String Key, String value, boolean isAdd){
+    public static void setUser(String Id, String Key, Object value, boolean isAdd){
             updateDB(Id, "userId",Key, value, isAdd );
     }
 
 
-    public static Document get(String Id){
-        return (Document) collection.find(new Document("serverId", Id)).cursor().next();
+    public static Document get(String Id) throws InterruptedException {
+        try{
+            return (Document) collection.find(new Document("serverId", Id)).cursor().next();
+        }catch (NoSuchElementException exception){
+            createUserDB(Id);
+            Thread.sleep(200);
+            return (Document) collection.find(new Document("serverId", Id)).cursor().next();
+        }
     }
 
-    public static Document getUser(String Id){
-        return (Document) collection.find(new Document("userId", Id)).cursor().next();
+    public static Document getUser(String Id) throws InterruptedException {
+        try{
+            return (Document) collection.find(new Document("userId", Id)).cursor().next();
+        }catch (NoSuchElementException exception){
+            createUserDB(Id);
+            Thread.sleep(200);
+            return (Document) collection.find(new Document("userId", Id)).cursor().next();
+        }
+
     }
 
     public static boolean sync(String serverId){
@@ -59,14 +71,13 @@ public class Database extends ListenerAdapter {
             countingChannelId = (String)serverConfig.get("countingChannel");
             hasRewards = (boolean) serverConfig.get("hasRewards");
             amountCount = (Integer) serverConfig.get("beforeReward");
-            sendType = (boolean) serverConfig.get("sendType");
+            actionType = (boolean) serverConfig.get("actionType");
             sendMessage = (String) serverConfig.get("sendMessage");
-            emoji = (String) serverConfig.get("emoji");
             adminId.clear();
-            adminId.add((String) serverConfig.get("emoji"));
+            adminId.add("0");
 
             return true;
-        }catch (NoSuchElementException e){
+        }catch (NoSuchElementException | InterruptedException e){
             return false;
         }
     }
@@ -78,11 +89,10 @@ public class Database extends ListenerAdapter {
         Document document = new Document("serverId", Id)
                 .append("countingChannel", "none")
                 .append("hasRewards", false)
-                .append("beforeReward", 0)
-                .append("admins", "0")
-                .append("sendType", false)  //false means send to channel
-                .append("sendMessage", "null")
-                .append("emoji", ":sparkles:");
+                .append("beforeReward", 0) //amount counts
+                .append("admins", "0") //for admins and channels
+                .append("actionType", false)  //false means send to channel
+                .append("sendMessage", "null");
 
         collection.insertOne(document);
 
@@ -91,8 +101,10 @@ public class Database extends ListenerAdapter {
 
     private static void createUserDB(String userId){
         //user config
+        int defaultValue = 0;
         Document document = new Document("userId", userId)
-                .append("counted", 0);
+                .append("counted", defaultValue);
+
         collection.insertOne(document);
     }
 
@@ -103,7 +115,7 @@ public class Database extends ListenerAdapter {
     //addupdate method
 
 
-    private static void updateDB(String Id, String field,  String key, String value, boolean isAdd){
+    private static void updateDB(String Id, String field,  String key, Object value, boolean isAdd){
         //for server
         Document document = null;
         try{
@@ -121,7 +133,7 @@ public class Database extends ListenerAdapter {
             Bson updateKey = new Document("$set", Updatedocument);
             collection.updateOne(document, updateKey);
         }else{
-            Document Updatedocument = new Document(key, document.get("key") + value);
+            Document Updatedocument = new Document(key, (Integer) document.get(key) + Integer.parseInt((String) value));
             Bson updateKey = new Document("$set", Updatedocument);
             collection.updateOne(document, updateKey);
         }
