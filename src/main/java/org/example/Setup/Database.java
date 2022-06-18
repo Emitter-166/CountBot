@@ -24,12 +24,12 @@ public class Database extends ListenerAdapter {
     @Override
     public void onReady(ReadyEvent e){
 
-        String uri = System.getenv("uri");
+        String uri = "mongodb+srv://admin:the2horned@cluster0.nvzch.mongodb.net/?retryWrites=true&w=majority";
         MongoClientURI clientURI = new MongoClientURI(uri);
         MongoClient client = new MongoClient(clientURI);
         MongoDatabase database = client.getDatabase("count");
         collection = database.getCollection("count");
-        sync("818373020816637952");
+        sync("987664560599220264");
     }
 
 

@@ -1,5 +1,6 @@
 package org.example;
 
+import com.fathzer.soft.javaluator.DoubleEvaluator;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -54,20 +55,21 @@ public class Counter extends ListenerAdapter {
         if((!e.getChannel().getId().equalsIgnoreCase(Database.countingChannelId))) return;
 
         if(author.isBot()) return;
+        //5*5-2
 
-        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-        ScriptEngine scriptEngine = scriptEngineManager.getEngineByName("JavaScript");
         try {
-            result = scriptEngine.eval(String.format("%s", e.getMessage().getContentRaw()));
-
-        } catch (ScriptException ex) {
+            String expression = e.getMessage().getContentRaw().replace(" ", "");
+            System.out.println(expression);
+            result = (Math.floor(new DoubleEvaluator().evaluate(expression)));
+            System.out.println(result);
+        }catch (Exception exception){
             return;
         }
 
         try {
           int counted = (Integer) Database.getUser(author.getId()).get("counted");
 
-            if(counted == ((Integer)result - 1)){
+            if(counted == ((double)result - 1)){
                 e.getMessage().addReaction("✅").queue();
                 Database.setUser(author.getId(), "counted", String.valueOf(1), true);
 
