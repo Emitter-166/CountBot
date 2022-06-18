@@ -16,8 +16,43 @@ public class Counter extends ListenerAdapter {
     Object result;
     @Override
     public void onMessageReceived(MessageReceivedEvent e){
-        if((!e.getChannel().getId().equalsIgnoreCase(Database.countingChannelId))) return;
         User author = e.getAuthor();
+        //help commands
+        if(e.getMessage().getContentRaw().equalsIgnoreCase(".help")){
+            EmbedBuilder helpBuilder = new EmbedBuilder()
+                    .setTitle("Help")
+                    .addField("Commands", "" +
+                            "`.counted` **see where you left off** \n" +
+                            "`.counted userId` **see where a specific member left off**", false)
+                    .setColor(Color.WHITE);
+            e.getMessage().replyEmbeds(helpBuilder.build()).queue();
+        }
+        String args[] = e.getMessage().getContentRaw().split(" ");
+        switch (args[0]){
+            case ".counted":
+                if(args.length == 1){
+                    try {
+                        EmbedBuilder countedBuilder = new EmbedBuilder()
+                                .setColor(Color.BLACK)
+                                .setDescription(String.format("**you have counted to %s**",Database.getUser(author.getId()).get("counted")));
+                        e.getMessage().replyEmbeds(countedBuilder.build()).queue();
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }else if(args.length == 2){
+                    try {
+                        EmbedBuilder countedBuilder = new EmbedBuilder()
+                                .setColor(Color.BLACK)
+                                .setDescription(String.format("**%s have counted to %s**", e.getGuild().retrieveMemberById(args[1]).complete().getAsMention(),Database.getUser(args[1]).get("counted")));
+                        e.getMessage().replyEmbeds(countedBuilder.build()).queue();
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+        }
+
+        if((!e.getChannel().getId().equalsIgnoreCase(Database.countingChannelId))) return;
+
         if(author.isBot()) return;
 
         ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
@@ -26,7 +61,6 @@ public class Counter extends ListenerAdapter {
             result = scriptEngine.eval(String.format("%s", e.getMessage().getContentRaw()));
 
         } catch (ScriptException ex) {
-            System.out.println("not an math expression");
             return;
         }
 
@@ -66,6 +100,9 @@ public class Counter extends ListenerAdapter {
         } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         }
+
+
+
 
     }
 

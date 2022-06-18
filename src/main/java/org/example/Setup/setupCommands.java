@@ -60,7 +60,14 @@ public class setupCommands extends ListenerAdapter {
                                 "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
                                 "`=admins` same as above, admins listed here will be messaged when action gets triggered if actionType is set to DM \n" +
                                 "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
-                                "`=clear` will clear every config about the server from database", false);
+                                "`=clear` will clear every config about the server from database \n" +
+                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n", false)
+                                .addField("Modes:" , "\n" +
+                                        "1.`DM mode` **it will dm an admin when someone counts to reward amount** \n" +
+                                        "to enable this, you must set `=admins admin to DM` and `actionType DM` \n" +
+                                        "ㅤㅤㅤㅤ\n" +
+                                        "2. `Channel mode` **it will send action message to a specified channel of the server** \n" +
+                                        "to enable this, you must set `=actionChannel` <--(use this command on the channel you want the message to be sent), and set `actionType channel`", false);
 
                                 e.getMessage().replyEmbeds(helpBuilder.build())
                                         .mentionRepliedUser(false)
