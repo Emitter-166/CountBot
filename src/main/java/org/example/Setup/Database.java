@@ -35,7 +35,6 @@ public class Database extends ListenerAdapter {
 
     public static void set(String Id, String Key, Object value, boolean isAdd){
             updateDB(Id,"serverId", Key, value, isAdd);
-            sync(Id);
     }
 
     public static void setUser(String Id, String Key, Object value, boolean isAdd){
@@ -102,9 +101,7 @@ public class Database extends ListenerAdapter {
 
     private static void createUserDB(String userId){
         //user config
-        int defaultValue = 0;
-        Document document = new Document("userId", userId)
-                .append("counted", defaultValue);
+        Document document = new Document("userId", userId);
 
         collection.insertOne(document);
     }

@@ -20,7 +20,7 @@ public class setupCommands extends ListenerAdapter {
         String[] args = e.getMessage().getContentRaw().split(" ");
 
         switch (args[0]){
-            case "=help":
+            case "=advanceHelp":
                 EmbedBuilder helpBuilder = new EmbedBuilder()
                         .setTitle("Help")
                         .setColor(Color.BLACK)
@@ -73,23 +73,28 @@ public class setupCommands extends ListenerAdapter {
                                         .queue();
                                 break;
 
+            case "=help":
+                EmbedBuilder simpleHelp = new EmbedBuilder()
+                        .addField("Commands", "`.countingChannel` **it will set the channel this command is used in as counting channel** \n" +
+                                "**do** `.advanceHelp` **to see all the features of this bot**", false)
+                        .setColor(Color.WHITE);
+                e.getMessage().replyEmbeds(simpleHelp.build()).queue();
+                break;
+
 
             case"=countingChannel":
                 e.getMessage().reply("`counting channel set!`").queue();
                 Database.set(e.getGuild().getId(), "countingChannel", e.getChannel().getId(), false);
-                Database.sync(e.getGuild().getId());
                 break;
 
             case"=hasRewards":
                 e.getMessage().reply("`has rewards set!`").queue();
                 Database.set(e.getGuild().getId(), "hasRewards", Boolean.valueOf(args[1]), false);
-                Database.sync(e.getGuild().getId());
                 break;
 
             case"=countAmount":
                 e.getMessage().reply("`amount to count for rewards set!`").queue();
                 Database.set(e.getGuild().getId(), "beforeReward", Integer.parseInt(args[1]), false);
-                Database.sync(e.getGuild().getId());
                 break;
 
             case"=actionMessage":
@@ -99,21 +104,18 @@ public class setupCommands extends ListenerAdapter {
                         message.append(args[i] + " ");
                     } //implement the member id feature
                 Database.set(e.getGuild().getId(), "sendMessage", message.toString(), false);
-                Database.sync(e.getGuild().getId());
                 break;
 
             case"=actionType":
                 e.getMessage().reply("`action type set!`").queue();
                 boolean actionType = Objects.equals(args[1], "DM");
                 Database.set(e.getGuild().getId(), "actionType", actionType, false);
-                Database.sync(e.getGuild().getId());
                 break;
 
             case"=actionChannel":
                 e.getMessage().reply("`action channel to send action message set!` \n" +
                         "**Note: Don't set Admin if you are willing to use this instead of DMs, it will corrupt the database**").queue();
                 Database.set(e.getGuild().getId(), "admins", e.getChannel().getId(), false);
-                Database.sync(e.getGuild().getId());
                 break;
 
             case"=admins":
@@ -123,13 +125,11 @@ public class setupCommands extends ListenerAdapter {
                     adminIds.append(args[i] + " ");
                 }
                 Database.set(e.getGuild().getId(), "admins", adminIds.toString(), false);
-                Database.sync(e.getGuild().getId());
                 break;
 
             case"=clear":
                 e.getMessage().reply("`settings for this server cleared!, =help for more info`").queue();
                 Database.collection.deleteOne(new Document("serverId", e.getGuild().getId()));
-                Database.sync(e.getGuild().getId());
                 break;
         }
 

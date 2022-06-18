@@ -13,6 +13,13 @@ public class Counter extends ListenerAdapter {
     Object result;
     @Override
     public void onMessageReceived(MessageReceivedEvent e){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Database.sync(e.getGuild().getId());
+            }
+        }).start();
+
         User author = e.getAuthor();
         //help commands
         if(e.getMessage().getContentRaw().equalsIgnoreCase(".help")){
@@ -31,7 +38,7 @@ public class Counter extends ListenerAdapter {
                     try {
                         EmbedBuilder countedBuilder = new EmbedBuilder()
                                 .setColor(Color.BLACK)
-                                .setDescription(String.format("**you have counted to %s**",Database.getUser(author.getId()).get("counted")));
+                                .setDescription(String.format("**you have counted to %s**",Database.getUser(author.getId()).get(e.getGuild().getId())));
                         e.getMessage().replyEmbeds(countedBuilder.build()).queue();
                     } catch (InterruptedException ex) {
                         throw new RuntimeException(ex);
@@ -40,7 +47,7 @@ public class Counter extends ListenerAdapter {
                     try {
                         EmbedBuilder countedBuilder = new EmbedBuilder()
                                 .setColor(Color.BLACK)
-                                .setDescription(String.format("**%s have counted to %s**", e.getGuild().retrieveMemberById(args[1]).complete().getAsMention(),Database.getUser(args[1]).get("counted")));
+                                .setDescription(String.format("**%s have counted to %s**", e.getGuild().retrieveMemberById(args[1]).complete().getAsMention(),Database.getUser(args[1]).get(e.getGuild().getId())));
                         e.getMessage().replyEmbeds(countedBuilder.build()).queue();
                     } catch (InterruptedException ex) {
                         throw new RuntimeException(ex);
@@ -60,14 +67,14 @@ public class Counter extends ListenerAdapter {
         }
 
         try {
-          int counted = (Integer) Database.getUser(author.getId()).get("counted");
+          int counted = (Integer) Database.getUser(author.getId()).get(e.getGuild().getId());
 
             if(counted == ((double)result - 1)){
                 e.getMessage().addReaction("✅").queue();
-                Database.setUser(author.getId(), "counted", String.valueOf(1), true);
+                Database.setUser(author.getId(), e.getGuild().getId(), String.valueOf(1), true);
 
                 //action will go here
-                if(Database.hasRewards && ((Integer) Database.getUser(author.getId()).get("counted") % Database.amountCount) == 0){
+                if(Database.hasRewards && ((Integer) Database.getUser(author.getId()).get(e.getGuild().getId()) % Database.amountCount) == 0){
                     if(Database.actionType){
                         EmbedBuilder actionEmbed = new EmbedBuilder()
                                 .setTitle(String.format("%s passed counter reward amount!", author.getName()))
@@ -89,7 +96,7 @@ public class Counter extends ListenerAdapter {
                         .setDescription(String.format("**Oops! you broke the counting chain at** `%s`, next number was: `%s`", counted, counted + 1))
                         .setColor(Color.BLACK);
                 e.getMessage().replyEmbeds(failureBuilder.build()).queue();
-                Database.setUser(author.getId(), "counted", 0, false);
+                Database.setUser(author.getId(), e.getGuild().getId(), 0, false);
             }
 
         } catch (InterruptedException ex) {
