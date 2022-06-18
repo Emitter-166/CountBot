@@ -34,7 +34,7 @@ public class Database extends ListenerAdapter {
 
 
 
-    public static void set(String Id, String Key, String value, boolean isAdd){
+    public static void set(String Id, String Key, Object value, boolean isAdd){
             updateDB(Id,"serverId", Key, value, isAdd);
     }
 

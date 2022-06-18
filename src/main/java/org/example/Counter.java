@@ -27,6 +27,7 @@ public class Counter extends ListenerAdapter {
 
         } catch (ScriptException ex) {
             System.out.println("not an math expression");
+            return;
         }
 
         try {
@@ -44,10 +45,10 @@ public class Counter extends ListenerAdapter {
                                 .setDescription(String.format("**%s**", Database.sendMessage) + "\n" +
                                         String.format("**user:** %s", author.getAsMention()));
 
-                        Database.adminId.forEach(id -> Main.jda.openPrivateChannelById(id).flatMap(privateChannel -> privateChannel.sendMessageEmbeds(actionEmbed.build())).queue());
+                        Database.adminId.forEach(id -> Main.jda.openPrivateChannelById(id.split(" ")[0]).flatMap(privateChannel -> privateChannel.sendMessageEmbeds(actionEmbed.build())).queue());
                     }else{
                         //sending message to channel
-                        e.getGuild().getTextChannelById(Database.adminId.get(0)).sendMessage(Database.sendMessage).queue();
+                        e.getGuild().getTextChannelById(Database.adminId.get(0).split(" ")[0]).sendMessage(Database.sendMessage).queue();
                     }
                     e.getMessage().addReaction("\uD83C\uDF89").queue();
                 }
