@@ -25,45 +25,43 @@ public class setupCommands extends ListenerAdapter {
                         .setTitle("Help")
                         .setColor(Color.BLACK)
                         .addField("Commands: ",  "" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
+                                "ㅤ\n" +
                                 "`=countingChannel` **set counting channel** \n" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
+                                "ㅤ\n" +
                                 "`=hasRewards true/false` **if true, actions below this message will be executed** \n" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
+                                "ㅤ\n" +
                                 "`=countAmount amount` **amount to count before reward** \n" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
+                                "ㅤ\n" +
                                 "`=actionMessage message` **What message to send when members reaches count amount(for action, not to the user, below this line)**\n" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
+                                "ㅤ\n" +
                                 "`=actionType (DM/channel)` **send message to a channel or to the admins** \n" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
+                                "ㅤ\n" +
                                 "`=actionChannel` **Channel to send message when count amount is crossed** \n" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
+                                "ㅤ\n" +
                                 "`=admins adminUserIds (multiple can be added)` **Admins to DM** \n" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
+                                "ㅤ\n" +
                                 "`=clear` **clear server settings** \n" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n", false)
-                        .addField("Conclusion", "" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ \n" +
+                                "ㅤ\n", false)
+                        .addField("Conclusion", "ㅤ\n" +
                                 "`=countingChannel` the channel this command is executed will be set as counting channel \n" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
+                                "ㅤ\n" +
                                 "`=hasRewards` this will define if there is any actions needs to be taken when member passes certain amount(s) \n" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
+                                "ㅤ\n" +
                                 "`=countAmount` it will set how much a member have to count in order for the reward (aka how much a member have to count to in order to trigger " +
                                 "an action) \n" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
+                                "ㅤ\n" +
                                 "`=actionMessage` when action is triggered, it will send a message to a channel or admins dm, this is what message to send. this message must have a parameter called" +
-                                "`%s`, the place you put it will be used as the users mention, for example if you do `=actionMessage .give %s 100` and I counts to reward amount, this message" +
-                                "will be sent to action channel: **.give <@671016674668838952> 100" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
-                                "`=actionType` it will define if the action message will be sent to dm or to admins \n" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
-                                "`=actionChannel` channel to send action message if action type is set to channel \n" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
-                                "`=admins` same as above, admins listed here will be messaged when action gets triggered if actionType is set to DM \n" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
-                                "`=clear` will clear every config about the server from database \n" +
-                                "ㅤㅤㅤㅤㅤㅤㅤㅤ\n", false)
-                                .addField("Modes:" , "\n" +
+                                "`%s`, the place you put it will be used as the users mention, for example if you do `=actionMessage .give %s 100` and I counts to reward amount, this message " +
+                                "will be sent to action channel: **.give <@671016674668838952> 100** \n" +
+                                "ㅤㅤ\n" +
+                                "`=actionType` it will define if the action message will be sent to dm or to channel \n" +
+                                "ㅤ\n" +
+                                "`=actionChannel` channel to send action message\n" +
+                                "ㅤ\n" +
+                                "`=admins` same as above, admins listed here will be messaged when actionType is set to DM \n" +
+                                "ㅤ\n", false)
+
+                        .addField("Modes:" , "\n" +
                                         "1.`DM mode` **it will dm an admin when someone counts to reward amount** \n" +
                                         "to enable this, you must set `=admins admin to DM` and `actionType DM` \n" +
                                         "ㅤㅤㅤㅤ\n" +

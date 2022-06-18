@@ -29,13 +29,13 @@ public class Database extends ListenerAdapter {
         MongoClient client = new MongoClient(clientURI);
         MongoDatabase database = client.getDatabase("count");
         collection = database.getCollection("count");
-        sync("859736561830592522");
     }
 
 
 
     public static void set(String Id, String Key, Object value, boolean isAdd){
             updateDB(Id,"serverId", Key, value, isAdd);
+            sync(Id);
     }
 
     public static void setUser(String Id, String Key, Object value, boolean isAdd){
@@ -51,6 +51,7 @@ public class Database extends ListenerAdapter {
             Thread.sleep(200);
             return (Document) collection.find(new Document("serverId", Id)).cursor().next();
         }
+
     }
 
     public static Document getUser(String Id) throws InterruptedException {
