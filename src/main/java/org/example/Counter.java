@@ -51,7 +51,6 @@ public class Counter extends ListenerAdapter {
         if((!e.getChannel().getId().equalsIgnoreCase(Database.countingChannelId))) return;
 
         if(author.isBot()) return;
-        //5*5-2
 
         try {
             String expression = e.getMessage().getContentRaw().replace(" ", "");
@@ -78,7 +77,7 @@ public class Counter extends ListenerAdapter {
                         Database.adminId.forEach(id -> Main.jda.openPrivateChannelById(id.split(" ")[0]).flatMap(privateChannel -> privateChannel.sendMessageEmbeds(actionEmbed.build())).queue());
                     }else{
                         //sending message to channel
-                        e.getGuild().getTextChannelById(Database.adminId.get(0).split(" ")[0]).sendMessage(Database.sendMessage).queue();
+                        e.getGuild().getTextChannelById(Database.adminId.get(0).split(" ")[0]).sendMessage(String.format(Database.sendMessage, author.getAsMention())).queue();
                     }
                     e.getMessage().addReaction("\uD83C\uDF89").queue();
                 }

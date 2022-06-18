@@ -51,8 +51,9 @@ public class setupCommands extends ListenerAdapter {
                                 "`=countAmount` it will set how much a member have to count in order for the reward (aka how much a member have to count to in order to trigger " +
                                 "an action) \n" +
                                 "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
-                                "`=actionMessage` when action is triggered, it will send a message to a channel or admins dm, this is what message to send. last part of this message will be" +
-                                "the members user id (who counted to reward amount and triggered reward system) \n" +
+                                "`=actionMessage` when action is triggered, it will send a message to a channel or admins dm, this is what message to send. this message must have a parameter called" +
+                                "`%s`, the place you put it will be used as the users mention, for example if you do `=actionMessage .give %s 100` and I counts to reward amount, this message" +
+                                "will be sent to action channel: **.give <@671016674668838952> 100" +
                                 "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
                                 "`=actionType` it will define if the action message will be sent to dm or to admins \n" +
                                 "ㅤㅤㅤㅤㅤㅤㅤㅤ\n" +
