@@ -6,10 +6,6 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.example.Setup.Database;
-
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
 import java.awt.*;
 
 
@@ -59,9 +55,7 @@ public class Counter extends ListenerAdapter {
 
         try {
             String expression = e.getMessage().getContentRaw().replace(" ", "");
-            System.out.println(expression);
             result = (Math.floor(new DoubleEvaluator().evaluate(expression)));
-            System.out.println(result);
         }catch (Exception exception){
             return;
         }

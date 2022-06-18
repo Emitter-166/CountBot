@@ -29,7 +29,7 @@ public class Database extends ListenerAdapter {
         MongoClient client = new MongoClient(clientURI);
         MongoDatabase database = client.getDatabase("count");
         collection = database.getCollection("count");
-        sync("987664560599220264");
+        sync("859736561830592522");
     }
 
 
