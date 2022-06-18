@@ -47,7 +47,7 @@ public class Database extends ListenerAdapter {
         try{
             return (Document) collection.find(new Document("serverId", Id)).cursor().next();
         }catch (NoSuchElementException exception){
-            createUserDB(Id);
+            createDB(Id);
             Thread.sleep(200);
             return (Document) collection.find(new Document("serverId", Id)).cursor().next();
         }
@@ -74,7 +74,7 @@ public class Database extends ListenerAdapter {
             actionType = (boolean) serverConfig.get("actionType");
             sendMessage = (String) serverConfig.get("sendMessage");
             adminId.clear();
-            adminId.add("0");
+            adminId.add((String) serverConfig.get("admins"));
 
             return true;
         }catch (NoSuchElementException | InterruptedException e){

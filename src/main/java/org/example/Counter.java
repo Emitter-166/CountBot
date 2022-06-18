@@ -16,7 +16,7 @@ public class Counter extends ListenerAdapter {
     Object result;
     @Override
     public void onMessageReceived(MessageReceivedEvent e){
-       // if((!e.getChannel().getId().equalsIgnoreCase(Database.countingChannelId))) return;
+        if((!e.getChannel().getId().equalsIgnoreCase(Database.countingChannelId))) return;
         User author = e.getAuthor();
         if(author.isBot()) return;
 
@@ -40,18 +40,23 @@ public class Counter extends ListenerAdapter {
                 if(Database.hasRewards && ((Integer) Database.getUser(author.getId()).get("counted") % Database.amountCount) == 0){
                     if(Database.actionType){
                         EmbedBuilder actionEmbed = new EmbedBuilder()
-                                .setTitle(String.format("%s counter reward amount!", author.getName()))
-                                .setDescription(String.format("**%s**", Database.sendMessage));
+                                .setTitle(String.format("%s passed counter reward amount!", author.getName()))
+                                .setDescription(String.format("**%s**", Database.sendMessage) + "\n" +
+                                        String.format("**user:** %s", author.getAsMention()));
+
                         Database.adminId.forEach(id -> Main.jda.openPrivateChannelById(id).flatMap(privateChannel -> privateChannel.sendMessageEmbeds(actionEmbed.build())).queue());
                     }else{
                         //sending message to channel
                         e.getGuild().getTextChannelById(Database.adminId.get(0)).sendMessage(Database.sendMessage).queue();
                     }
+                    e.getMessage().addReaction("\uD83C\uDF89").queue();
                 }
+
+
             }else{
                 e.getMessage().addReaction("⛔").queue();
                 EmbedBuilder failureBuilder = new EmbedBuilder()
-                        .setDescription(String.format("**Oops! you broke the counting chain at** `%s`", counted))
+                        .setDescription(String.format("**Oops! you broke the counting chain at** `%s`, next number was: `%s`", counted, counted + 1))
                         .setColor(Color.BLACK);
                 e.getMessage().replyEmbeds(failureBuilder.build()).queue();
                 Database.setUser(author.getId(), "counted", 0, false);
