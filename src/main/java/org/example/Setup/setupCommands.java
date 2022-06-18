@@ -15,11 +15,13 @@ public class setupCommands extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent e){
         User author = e.getAuthor();
+        //checking all perms
         if(author.isBot()) return;
         if(!(e.getMember().hasPermission(Permission.ADMINISTRATOR))) return;
         String[] args = e.getMessage().getContentRaw().split(" ");
 
         switch (args[0]){
+            //help commands
             case "=advanceHelp":
                 EmbedBuilder helpBuilder = new EmbedBuilder()
                         .setTitle("Help")
@@ -30,15 +32,15 @@ public class setupCommands extends ListenerAdapter {
                                 "ㅤ\n" +
                                 "`=hasRewards true/false` **if true, actions below this message will be executed** \n" +
                                 "ㅤ\n" +
-                                "`=countAmount amount` **amount to count before reward** \n" +
+                                "`=countAmount amount` **amount members have to count before reward** \n" +
                                 "ㅤ\n" +
-                                "`=actionMessage message` **What message to send when members reaches count amount(for action, not to the user, below this line)**\n" +
+                                "`=actionMessage message` **What message to send when members reaches count amount(for action, not to send message to the user, below this line)**\n" +
                                 "ㅤ\n" +
                                 "`=actionType (DM/channel)` **send message to a channel or to the admins** \n" +
                                 "ㅤ\n" +
                                 "`=actionChannel` **Channel to send message when count amount is crossed** \n" +
                                 "ㅤ\n" +
-                                "`=admins adminUserIds (multiple can be added)` **Admins to DM** \n" +
+                                "`=admin adminUserId` **Admin to DM** \n" +
                                 "ㅤ\n" +
                                 "`=clear` **clear server settings** \n" +
                                 "ㅤ\n", false)
@@ -50,15 +52,15 @@ public class setupCommands extends ListenerAdapter {
                                 "`=countAmount` it will set how much a member have to count in order for the reward (aka how much a member have to count to in order to trigger " +
                                 "an action) \n" +
                                 "ㅤ\n" +
-                                "`=actionMessage` when action is triggered, it will send a message to a channel or admins dm, this is what message to send. this message must have a parameter called" +
+                                "`=actionMessage` when action is triggered, it will send a message to a channel or admins dm, this is what message to send. this message must have a parameter name: " +
                                 "`%s`, the place you put it will be used as the users mention, for example if you do `=actionMessage .give %s 100` and I counts to reward amount, this message " +
-                                "will be sent to action channel: **.give <@671016674668838952> 100** \n" +
+                                "will be sent to action channel / admin: **.give <@671016674668838952> 100** \n" +
                                 "ㅤㅤ\n" +
                                 "`=actionType` it will define if the action message will be sent to dm or to channel \n" +
                                 "ㅤ\n" +
                                 "`=actionChannel` channel to send action message\n" +
                                 "ㅤ\n" +
-                                "`=admins` same as above, admins listed here will be messaged when actionType is set to DM \n" +
+                                "`=admin` same as above, admins listed here will be messaged when actionType is set to DM \n" +
                                 "ㅤ\n", false)
 
                         .addField("Modes:" , "\n" +
@@ -75,13 +77,13 @@ public class setupCommands extends ListenerAdapter {
 
             case "=help":
                 EmbedBuilder simpleHelp = new EmbedBuilder()
-                        .addField("Commands", "`.countingChannel` **it will set the channel this command is used in as counting channel** \n" +
-                                "**do** `.advanceHelp` **to see all the features of this bot**", false)
+                        .addField("Commands", "`=countingChannel` **it will set the channel this command is used in as counting channel** \n" +
+                                "**do** `=advanceHelp` **to see all the features of this bot**", false)
                         .setColor(Color.WHITE);
                 e.getMessage().replyEmbeds(simpleHelp.build()).queue();
                 break;
 
-
+            //setup commands
             case"=countingChannel":
                 e.getMessage().reply("`counting channel set!`").queue();
                 Database.set(e.getGuild().getId(), "countingChannel", e.getChannel().getId(), false);
@@ -114,12 +116,13 @@ public class setupCommands extends ListenerAdapter {
 
             case"=actionChannel":
                 e.getMessage().reply("`action channel to send action message set!` \n" +
-                        "**Note: Don't set Admin if you are willing to use this instead of DMs, it will corrupt the database**").queue();
+                        "**Note: do** `=advanceHelp` **and take a look at Modes for more info**").queue();
                 Database.set(e.getGuild().getId(), "admins", e.getChannel().getId(), false);
                 break;
 
-            case"=admins":
-                e.getMessage().reply("`Admins set! remember this has over written action channel if you have set one` \n").queue();
+            case"=admin":
+                e.getMessage().reply("`Admin set!`\n" +
+                        "**Note: do** `=advanceHelp` **and take a look at Modes for more info**").queue();
                 StringBuilder adminIds = new StringBuilder();
                 for(int i  = 1; i < args.length; i++){
                     adminIds.append(args[i] + " ");

@@ -53,13 +53,20 @@ public class Database extends ListenerAdapter {
 
     }
 
-    public static Document getUser(String Id) throws InterruptedException {
+    public static Integer getUser(String userId, String key,  String serverId) throws InterruptedException {
         try{
-            return (Document) collection.find(new Document("userId", Id)).cursor().next();
+            if(((Document) collection.find(new Document("userId", userId)).cursor().next()).get(key) != null){
+                return (Integer) ((Document) collection.find(new Document("userId", userId)).cursor().next()).get(key);
+            }else{
+                setUser(userId, serverId, 0, false);
+                Thread.sleep(200);
+                return (Integer) ((Document) collection.find(new Document("userId", userId)).cursor().next()).get(key);
+            }
+
         }catch (NoSuchElementException exception){
-            createUserDB(Id);
+            setUser(userId, serverId, 0, false);
             Thread.sleep(200);
-            return (Document) collection.find(new Document("userId", Id)).cursor().next();
+            return (Integer) ((Document) collection.find(new Document("userId", userId)).cursor().next()).get(key);
         }
 
     }
@@ -90,7 +97,7 @@ public class Database extends ListenerAdapter {
                 .append("countingChannel", "none")
                 .append("hasRewards", false)
                 .append("beforeReward", 0) //amount counts
-                .append("admins", "0") //for admins and channels
+                .append("admins", "none") //for admins and channels
                 .append("actionType", false)  //false means send to channel
                 .append("sendMessage", "null");
 
@@ -107,12 +114,6 @@ public class Database extends ListenerAdapter {
     }
 
 
-
-    //add user method
-    //user database template
-    //addupdate method
-
-
     private static void updateDB(String Id, String field,  String key, Object value, boolean isAdd){
         //for server
         Document document = null;
@@ -124,6 +125,7 @@ public class Database extends ListenerAdapter {
             }else{
                 createUserDB(Id);
             }
+            document = (Document) collection.find(new Document(field, Id)).cursor().next();
         }
 
         if(!isAdd){
