@@ -11,7 +11,7 @@ public class Main {
     public static JDA jda;
     public static void main(String[] args) throws LoginException {
 
-        jda = JDABuilder.createLight("OTg3MzA4Njk4NDYyNDU3ODU2.Gtphh9.zTX9Pjb2jvnnWa8uWXdmu1BIWF0aCHwP8Y5qR8")
+        jda = JDABuilder.createLight(System.getenv("token"))
                 .addEventListeners(new Database())
                 .addEventListeners(new setupCommands())
                 .addEventListeners(new Counter())
